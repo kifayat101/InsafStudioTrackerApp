@@ -1,25 +1,11 @@
-// Full app code with tracker functionality, Tailwind design, and 3-member task workflow
-import { useState } from 'react';
+// ✅ Full tracker app with localStorage persistence
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Progress } from "../components/ui/progress";
 import { Input } from "../components/ui/input";
-import { useState, useEffect } from 'react';
 
-// Load saved team data from localStorage on first load
-useEffect(() => {
-  const saved = localStorage.getItem("insafTeam");
-  if (saved) setTeam(JSON.parse(saved));
-}, []);
-
-// Save team data to localStorage on every change
-useEffect(() => {
-  localStorage.setItem("insafTeam", JSON.stringify(team));
-}, [team]);
-
-
-
-const members = [
+const initialMembers = [
   {
     id: 1,
     name: "Member 1",
@@ -77,8 +63,23 @@ const members = [
 ];
 
 export default function Home() {
-  const [team, setTeam] = useState(members);
+  const [team, setTeam] = useState([]);
   const [activeMember, setActiveMember] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("insafTeam");
+    if (saved) {
+      setTeam(JSON.parse(saved));
+    } else {
+      setTeam(initialMembers);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (team.length > 0) {
+      localStorage.setItem("insafTeam", JSON.stringify(team));
+    }
+  }, [team]);
 
   const toggleTask = (memberId, taskIndex) => {
     const updated = team.map(member => {
