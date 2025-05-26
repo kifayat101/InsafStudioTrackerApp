@@ -1,5 +1,7 @@
 // ✅ Full tracker app with localStorage persistence
+'use client';
 import { useState, useEffect } from 'react';
+
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Progress } from "../components/ui/progress";
@@ -66,20 +68,23 @@ export default function Home() {
   const [team, setTeam] = useState([]);
   const [activeMember, setActiveMember] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
+  if (typeof window !== 'undefined') {
     const saved = localStorage.getItem("insafTeam");
     if (saved) {
       setTeam(JSON.parse(saved));
     } else {
       setTeam(initialMembers);
     }
-  }, []);
+  }
+}, []);
 
-  useEffect(() => {
-    if (team.length > 0) {
-      localStorage.setItem("insafTeam", JSON.stringify(team));
-    }
-  }, [team]);
+useEffect(() => {
+  if (typeof window !== 'undefined' && team.length > 0) {
+    localStorage.setItem("insafTeam", JSON.stringify(team));
+  }
+}, [team]);
+
 
   const toggleTask = (memberId, taskIndex) => {
     const updated = team.map(member => {
