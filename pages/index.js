@@ -6,6 +6,18 @@ import { Progress } from "../components/ui/progress";
 import { Input } from "../components/ui/input";
 import { useState, useEffect } from 'react';
 
+// Load saved team data from localStorage on first load
+useEffect(() => {
+  const saved = localStorage.getItem("insafTeam");
+  if (saved) setTeam(JSON.parse(saved));
+}, []);
+
+// Save team data to localStorage on every change
+useEffect(() => {
+  localStorage.setItem("insafTeam", JSON.stringify(team));
+}, [team]);
+
+
 
 const members = [
   {
